@@ -5,6 +5,8 @@ class Player
 
     if enemy?
       warrior.attack!
+    elsif captive?
+      warrior.rescue!
     elsif taking_damage?
       warrior.walk!
     elsif can_rest?
@@ -29,5 +31,9 @@ class Player
 
   def taking_damage?
     @warrior.health < @health ? true : false
+  end
+
+  def captive?
+    @warrior.feel.captive? ? true : false
   end
 end
