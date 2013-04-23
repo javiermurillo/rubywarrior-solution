@@ -5,35 +5,34 @@ class Player
     @warrior = warrior
     @retreating ||= 0
 
-    change_direction if wall?
-
     if enemy?
-      warrior.attack!(@direction)
+      warrior.attack!
     elsif captive?
-      warrior.rescue!(@direction)
+      warrior.rescue!
     elsif retreating?
+      wall? ? warrior.rest! : warrior.walk!
       @retreating -= 1
-      warrior.walk!(@direction)
     elsif dying?
-      change_direction
-      @retreating = 2
-      warrior.walk!(@direction)
+      @retreating = 3
+      warrior.pivot!
     elsif taking_damage?
-      warrior.walk!(@direction)
+      warrior.walk!
     elsif can_rest?
       warrior.rest!
+    elsif wall?
+      warrior.pivot!
     elsif space?
-      warrior.walk!(@direction)
+      warrior.walk!
     end
     @health = warrior.health
   end
 
   def enemy?
-    @warrior.feel(@direction).enemy? ? true : false
+    @warrior.feel.enemy? ? true : false
   end
 
   def space?
-    @warrior.feel(@direction).empty? ? true : false
+    @warrior.feel.empty? ? true : false
   end
 
   def can_rest?
@@ -49,11 +48,7 @@ class Player
   end
 
   def captive?
-    @warrior.feel(@direction).captive? ? true : false
-  end
-
-  def change_direction
-    @direction = @direction == :backward ? :forward : :backward
+    @warrior.feel.captive? ? true : false
   end
 
   def retreating?
@@ -61,6 +56,6 @@ class Player
   end
 
   def wall?
-    @warrior.feel(@direction).wall? ? true : false
+    @warrior.feel.wall? ? true : false
   end
 end
