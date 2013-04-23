@@ -1,11 +1,8 @@
 class Player
   def play_turn(warrior)
     @health ||= warrior.health
-    @direction ||= :forward
     @warrior = warrior
     @retreating ||= 0
-
-    p "I see: #{warrior.look}"
 
     if enemy?
       warrior.attack!
@@ -32,46 +29,40 @@ class Player
   end
 
   def enemy?
-    @warrior.feel.enemy? ? true : false
+    @warrior.feel.enemy?
   end
 
   def space?
-    @warrior.feel.empty? ? true : false
+    @warrior.feel.empty?
   end
 
   def can_rest?
-    space? and @warrior.health < 20 ? true : false
+    space? and @warrior.health < 20
   end
 
   def taking_damage?
-    @warrior.health < @health ? true : false
+    @warrior.health < @health
   end
 
   def dying?
-    @warrior.health < @health and @warrior.health < 10 ? true : false
+    @warrior.health < @health and @warrior.health < 10
   end
 
   def captive?
-    @warrior.feel.captive? ? true : false
+    @warrior.feel.captive?
   end
 
   def retreating?
-    @retreating != 0 ? true : false
+    @retreating != 0
   end
 
   def wall?
-    @warrior.feel.wall? ? true : false
+    @warrior.feel.wall?
   end
 
   def can_shoot?
     @obj = Array.new(3)
-    @warrior.look.each_with_index do |objective,index|
-      @obj[index] = objective.to_s
-    end
-    if (@obj[0] == "Wizard") or (@obj[0] == "nothing" and @obj[1] == "Wizard") or (((@obj[0] and @obj[1]) == "nothing") and @obj[2] == "Wizard")
-      true
-    else
-      false
-    end
+    @warrior.look.each_with_index{ |objective,index|  @obj[index] = objective.to_s }
+    (@obj[0] == "Wizard") or (@obj[0] == "nothing" and @obj[1] == "Wizard") or (((@obj[0] and @obj[1]) == "nothing") and @obj[2] == "Wizard") ? true : false
   end
 end
