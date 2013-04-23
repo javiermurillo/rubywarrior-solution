@@ -1,14 +1,18 @@
 class Player
   def play_turn(warrior)
+    @health ||= warrior.health
     @warrior = warrior
 
     if enemy?
       warrior.attack!
+    elsif taking_damage?
+      warrior.walk!
     elsif can_rest?
       warrior.rest!
     elsif space?
       warrior.walk!
     end
+    @health = warrior.health
   end
 
   def enemy?
@@ -21,5 +25,9 @@ class Player
 
   def can_rest?
     space? and @warrior.health < 20 ? true : false
+  end
+
+  def taking_damage?
+    @warrior.health < @health ? true : false
   end
 end
