@@ -5,8 +5,12 @@ class Player
     @warrior = warrior
     @retreating ||= 0
 
+    p "I see: #{warrior.look}"
+
     if enemy?
       warrior.attack!
+    elsif can_shoot?
+      warrior.shoot!
     elsif captive?
       warrior.rescue!
     elsif retreating?
@@ -57,5 +61,17 @@ class Player
 
   def wall?
     @warrior.feel.wall? ? true : false
+  end
+
+  def can_shoot?
+    @obj = Array.new(3)
+    @warrior.look.each_with_index do |objective,index|
+      @obj[index] = objective.to_s
+    end
+    if (@obj[0] == "Wizard") or (@obj[0] == "nothing" and @obj[1] == "Wizard") or (((@obj[0] and @obj[1]) == "nothing") and @obj[2] == "Wizard")
+      true
+    else
+      false
+    end
   end
 end
